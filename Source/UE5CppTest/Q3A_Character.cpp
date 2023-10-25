@@ -55,3 +55,16 @@ void AQ3A_Character::LookRight(const FInputActionValue& ActionValue)
 	AddControllerYawInput(DirectionValue);
 }
 
+void AQ3A_Character::Fire(const FInputActionValue& ActionValue)
+{
+	if (InventoryComponent)
+	{
+		InventoryComponent->FireCurrentWeapon();
+	}
+}
+
+USkeletalMeshComponent* AQ3A_Character::GetCharacterMesh()
+{
+	return GetMesh();
+}
+

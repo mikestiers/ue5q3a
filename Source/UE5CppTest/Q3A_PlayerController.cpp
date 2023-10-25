@@ -44,6 +44,11 @@ void AQ3A_PlayerController::SetupInputComponent()
         {
             PlayerEnhancedInputComponent->BindAction(LookRightAction, ETriggerEvent::Triggered, this, &AQ3A_PlayerController::LookRight);
         }
+
+        if (FireAction)
+        {
+            PlayerEnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &AQ3A_PlayerController::Fire);
+        }
     }
 }
 
@@ -83,4 +88,12 @@ void AQ3A_PlayerController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
     Q3ACharacter = Cast<AQ3A_Character>(InPawn);
+}
+
+void AQ3A_PlayerController::Fire(const FInputActionValue& ActionValue)
+{
+    if (Q3ACharacter)
+    {
+        Q3ACharacter->Fire(ActionValue);
+    }
 }

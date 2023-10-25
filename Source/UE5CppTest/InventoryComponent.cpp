@@ -17,6 +17,7 @@ UInventoryComponent::UInventoryComponent()
 
 void UInventoryComponent::BeginPlay()
 {
+	Super::BeginPlay();
 	Character = Cast<AQ3A_Character>(GetOwner());
 	SetupStartingWeapons();
 }
@@ -25,14 +26,17 @@ void UInventoryComponent::SetupStartingWeapons()
 {
 	for (int32 i = 0; i < StartingWeapons.Num(); i++)
 	{
-		AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(StartingWeapons[i]->GetClass(), GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
+		AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(StartingWeapons[i], GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
 		
 		if (Weapon && Character)
 		{
+			Weapon->SetOwner(Character);
 			FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
-			Weapon->AttachToComponent(Character->GetMesh(), AttachmentTransformRules, Weapon->SocketName);
+			Weapon->AttachToComponent(Character->GetCharacterMesh(), AttachmentTransformRules, Weapon->SocketName);
 			Weapons.Add(Weapon);
 		}
+
+
 	}
 }
 
@@ -40,7 +44,7 @@ void UInventoryComponent::FireCurrentWeapon()
 {
 	if (Weapons.IsValidIndex(CurrentWeaponIndex))
 	{
-		//Weapons[CurrentWeaponIndex]->Fire();
+		Weapons[CurrentWeaponIndex]->Fire();
 	}
 }
 
@@ -74,5 +78,14 @@ void UInventoryComponent::SelectPreviousWeapon()
 			CurrentWeaponIndex = Weapons.Num() - 1;
 		}
 	}
+}
+
+AWeapon* UInventoryComponent::GetCurrentWeapon()
+{
+	if (Weapons.IsValidIndex(CurrentWeaponIndex))
+	{
+		return Weapons[CurrentWeaponIndex];
+	}
+	return nullptr;
 }
 

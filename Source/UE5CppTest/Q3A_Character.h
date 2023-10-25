@@ -42,4 +42,8 @@ public:
 	void LookUp(const FInputActionValue& ActionValue);
 
 	void LookRight(const FInputActionValue& ActionValue);
+
+	void Fire(const FInputActionValue& ActionValue);
+
+	virtual USkeletalMeshComponent* GetCharacterMesh();
 };

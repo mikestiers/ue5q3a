@@ -14,6 +14,12 @@ APlayerCharacter::APlayerCharacter()
 	{
 		CameraComponent->SetupAttachment(RootComponent);
 	}
+
+	FirstPersonArms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonArms"));
+	if (FirstPersonArms)
+	{
+		FirstPersonArms->SetupAttachment(CameraComponent);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -35,5 +41,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+USkeletalMeshComponent* APlayerCharacter::GetCharacterMesh()
+{
+	return FirstPersonArms;
 }
 

@@ -21,6 +21,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* FirstPersonArms;
 
 
 protected:
@@ -34,4 +36,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual USkeletalMeshComponent* GetCharacterMesh() override;
 };

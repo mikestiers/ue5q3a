@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UInputAction* LookRightAction;
 
+	UPROPERTY(EditAnywhere)
+	UInputAction* FireAction;
+
 	UPROPERTY()
 	AQ3A_Character* Q3ACharacter;
 
@@ -50,5 +53,7 @@ public:
 	void LookRight(const FInputActionValue& ActionValue);
 
 	void OnPossess(APawn* InPawn) override;
+
+	void Fire(const FInputActionValue& ActionValue);
 
 };

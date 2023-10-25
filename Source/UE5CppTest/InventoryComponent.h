@@ -47,4 +47,6 @@ public:
 	void SelectNextWeapon();
 
 	void SelectPreviousWeapon();
+
+	AWeapon* GetCurrentWeapon();
 };
