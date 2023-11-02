@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere)
+	UInputAction* WeaponSwitchAction;
+
 	UPROPERTY()
 	AQ3A_Character* Q3ACharacter;
 
@@ -56,4 +59,5 @@ public:
 
 	void Fire(const FInputActionValue& ActionValue);
 
+	void WeaponSwitch(const FInputActionValue& ActionValue);
 };

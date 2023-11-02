@@ -45,5 +45,7 @@ public:
 
 	void Fire(const FInputActionValue& ActionValue);
 
+	void WeaponSwitch(const FInputActionValue& ActionValue);
+
 	virtual USkeletalMeshComponent* GetCharacterMesh();
 };

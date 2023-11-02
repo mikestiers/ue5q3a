@@ -9,6 +9,7 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 class UStaticMeshComponent;
+class UParticleSystem;
 
 UCLASS()
 class UE5CPPTEST_API AProjectile : public AActor
@@ -18,8 +19,12 @@ class UE5CPPTEST_API AProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
+
 	void Init(float InDamage);
+	
 	float Damage;
+
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
@@ -30,6 +35,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* ProjectileMesh;
 
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* ParticleSystem;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -37,5 +45,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void Explode();
 
 };

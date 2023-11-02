@@ -63,6 +63,21 @@ void AQ3A_Character::Fire(const FInputActionValue& ActionValue)
 	}
 }
 
+void AQ3A_Character::WeaponSwitch(const FInputActionValue& ActionValue)
+{
+	if (InventoryComponent)
+	{
+		if (ActionValue.Get<float>() > 0)
+		{
+			InventoryComponent->SelectNextWeapon();
+		}
+		else if (ActionValue.Get<float>() < 0)
+		{
+			InventoryComponent->SelectPreviousWeapon();
+		}
+	}
+}
+
 USkeletalMeshComponent* AQ3A_Character::GetCharacterMesh()
 {
 	return GetMesh();

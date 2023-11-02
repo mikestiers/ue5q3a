@@ -48,26 +48,52 @@ void AWeapon::Fire()
 	}
 	if (ProjectileClass)
 	{
-		if (AQ3A_Character* Character = Cast<AQ3A_Character>(GetOwner()))
-		{
-			AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, GetActorLocation(), Character->GetControlRotation());
-			if (Projectile)
-			{
-				Projectile->Init(Damage);
-			}
-		}
+		FireProjectile();
 	}
 	else
 	{
-		FHitResult FireHitResult = GetWeaponLineTrace();
-		if (FireHitResult.IsValidBlockingHit())
+		FireLineTrace();
+	}
+}
+
+void AWeapon::FireProjectile()
+{
+	if (AQ3A_Character* Character = Cast<AQ3A_Character>(GetOwner()))
+	{
+		FActorSpawnParameters ActorSpawnParameters;
+		ActorSpawnParameters.Owner = Character;
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SkeletalMeshComponent->GetSocketLocation("Muzzle"), Character->GetControlRotation(), ActorSpawnParameters);
+		if (Projectile)
 		{
-			if (AQ3A_Character* Character = Cast<AQ3A_Character>(FireHitResult.GetActor()))
+			Projectile->Init(Damage);
+		}
+	}
+}
+
+void AWeapon::FireLineTrace()
+{
+	// Line trace #1 for camera
+	FHitResult CameraHitResult = GetWeaponLineTrace();
+
+	// Line trace #2 for bullet from muzzle of gun
+	FHitResult FireHitResult;
+	FVector StartLocation = SkeletalMeshComponent->GetSocketLocation("Muzzle");
+	FVector EndLocation = ((CameraHitResult.Location - StartLocation).GetSafeNormal() * CameraRange) + StartLocation;
+
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(GetOwner());
+	CollisionQueryParams.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(FireHitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, CollisionQueryParams, FCollisionResponseParams());
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 5, 0, 1);
+
+	if (FireHitResult.IsValidBlockingHit())
+	{
+		if (AQ3A_Character* Character = Cast<AQ3A_Character>(FireHitResult.GetActor()))
+		{
+			if (Character->HealthComponent)
 			{
-				if (Character->HealthComponent)
-				{
-					Character->HealthComponent->TakeDamage(Damage);
-				}
+				Character->HealthComponent->TakeDamage(Damage);
 			}
 		}
 	}
@@ -99,22 +125,32 @@ void AWeapon::Reload()
 FHitResult AWeapon::GetWeaponLineTrace()
 {
 	FHitResult HitResult;
+	FVector StartLocation;
+	FVector EndLocation;
+
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(GetOwner());
+	CollisionQueryParams.AddIgnoredActor(this);
+
+
 	if (APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner()))
 	{
-		FVector StartLocation = PlayerCharacter->CameraComponent->GetComponentLocation();
-		FVector EndLocation = StartLocation + (PlayerCharacter->CameraComponent->GetForwardVector() * CameraRange);
+		StartLocation = PlayerCharacter->CameraComponent->GetComponentLocation();
+		EndLocation = StartLocation + (PlayerCharacter->CameraComponent->GetForwardVector() * CameraRange);
 		
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, FCollisionQueryParams(), FCollisionResponseParams());
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, CollisionQueryParams, FCollisionResponseParams());
 	}
 	else if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(GetOwner()))
 	{
-		FVector StartLocation = EnemyCharacter->GetActorLocation();
-		FVector EndLocation = StartLocation + (EnemyCharacter->GetControlRotation().Vector() * CameraRange);
+		StartLocation = EnemyCharacter->GetActorLocation();
+		EndLocation = StartLocation + (EnemyCharacter->GetControlRotation().Vector() * CameraRange);
 
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, FCollisionQueryParams(), FCollisionResponseParams());
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, CollisionQueryParams, FCollisionResponseParams());
 
 	}
-		
+
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 5, 0, 1);
+	
 	return HitResult;
 }
 

@@ -56,6 +56,10 @@ public:
 
 	void Fire();
 
+	void FireProjectile();
+
+	void FireLineTrace();
+
 	void OnCanFireTimerComplete();
 
 	void Reload();

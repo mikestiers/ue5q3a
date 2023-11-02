@@ -49,6 +49,10 @@ void AQ3A_PlayerController::SetupInputComponent()
         {
             PlayerEnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &AQ3A_PlayerController::Fire);
         }
+        if (WeaponSwitchAction)
+        {
+            PlayerEnhancedInputComponent->BindAction(WeaponSwitchAction, ETriggerEvent::Started, this, &AQ3A_PlayerController::WeaponSwitch);
+        }
     }
 }
 
@@ -95,5 +99,13 @@ void AQ3A_PlayerController::Fire(const FInputActionValue& ActionValue)
     if (Q3ACharacter)
     {
         Q3ACharacter->Fire(ActionValue);
+    }
+}
+
+void AQ3A_PlayerController::WeaponSwitch(const FInputActionValue& ActionValue)
+{
+    if (Q3ACharacter)
+    {
+        Q3ACharacter->WeaponSwitch(ActionValue);
     }
 }

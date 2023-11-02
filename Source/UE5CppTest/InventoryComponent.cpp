@@ -35,9 +35,8 @@ void UInventoryComponent::SetupStartingWeapons()
 			Weapon->AttachToComponent(Character->GetCharacterMesh(), AttachmentTransformRules, Weapon->SocketName);
 			Weapons.Add(Weapon);
 		}
-
-
 	}
+	SelectWeaponByIndex(0);
 }
 
 void UInventoryComponent::FireCurrentWeapon()
@@ -65,6 +64,7 @@ void UInventoryComponent::SelectNextWeapon()
 		{
 			CurrentWeaponIndex = 0;
 		}
+		SelectWeaponByIndex(CurrentWeaponIndex);
 	}
 }
 
@@ -76,6 +76,25 @@ void UInventoryComponent::SelectPreviousWeapon()
 		if (CurrentWeaponIndex < 0)
 		{
 			CurrentWeaponIndex = Weapons.Num() - 1;
+		}
+		SelectWeaponByIndex(CurrentWeaponIndex);
+	}
+}
+
+void UInventoryComponent::SelectWeaponByIndex(int32 index)
+{
+	if (Weapons.IsValidIndex(index))
+	{
+		for (int32 i = 0; i < Weapons.Num(); i++)
+		{
+			if (i == index)
+			{
+				Weapons[i]->SetActorHiddenInGame(false);
+			}
+			else
+			{
+				Weapons[i]->SetActorHiddenInGame(true);
+			}
 		}
 	}
 }

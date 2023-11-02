@@ -48,5 +48,7 @@ public:
 
 	void SelectPreviousWeapon();
 
+	void SelectWeaponByIndex(int32 index);
+
 	AWeapon* GetCurrentWeapon();
 };

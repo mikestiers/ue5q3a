@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -31,17 +32,30 @@ void AProjectile::Init(float InDamage)
 	Damage = InDamage;
 }
 
+void AProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	
+	if (OtherActor == GetOwner())
+	{
+		return;
+	}
+	Explode();
+}
+
+void AProjectile::Explode()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
+	Destroy();
+}
+
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-
