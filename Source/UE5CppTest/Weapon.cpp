@@ -8,6 +8,7 @@
 #include "Projectile.h"
 #include "HealthComponent.h"
 #include "Camera/CameraComponent.h"
+#include "InventoryComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -18,12 +19,9 @@ AWeapon::AWeapon()
 	CameraRange = 10000.0f;
 	FiringRate = 1.0f;
 	CurrentAmmo = 10;
-	ReserveAmmo = 20;
-	MaxReserveAmmo = 100;
 	bCanFire = true;
 	AmmoMagazineCapacity = 10;
 	SocketName = FName("GripPoint");
-
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	check(SkeletalMeshComponent != nullptr)
 	SkeletalMeshComponent->SetupAttachment(RootComponent);
@@ -46,7 +44,7 @@ void AWeapon::Fire()
 	{
 		Reload();
 	}
-	if (ProjectileClass)
+	else if (ProjectileClass)
 	{
 		FireProjectile();
 	}
@@ -106,18 +104,25 @@ void AWeapon::OnCanFireTimerComplete()
 
 void AWeapon::Reload()
 {
-	if (CurrentAmmo < AmmoMagazineCapacity && ReserveAmmo > 0)
+	if (AQ3A_Character* Character = Cast<AQ3A_Character>(GetOwner()))
 	{
-		int32 RequiredAmmo = AmmoMagazineCapacity - CurrentAmmo;
-		if (ReserveAmmo >= RequiredAmmo)
+		if (Character->InventoryComponent)
 		{
-			CurrentAmmo = AmmoMagazineCapacity;
-			ReserveAmmo -= RequiredAmmo;
-		}
-		else
-		{
-			CurrentAmmo += ReserveAmmo;
-			ReserveAmmo = 0;
+			int32 ReserveAmmo = Character->InventoryComponent->CheckAmmo(GetClass()); // GetClass() gets whatever the instance is ... StaticClass() would get the class of AWeapon.  Not what is needed
+			if (CurrentAmmo < AmmoMagazineCapacity && ReserveAmmo > 0)
+			{
+				int32 RequiredAmmo = AmmoMagazineCapacity - CurrentAmmo;
+				if (ReserveAmmo >= RequiredAmmo)
+				{
+					CurrentAmmo = AmmoMagazineCapacity;
+					Character->InventoryComponent->SubtractAmmo(GetClass(), RequiredAmmo);
+				}
+				else
+				{
+					CurrentAmmo += ReserveAmmo;
+					Character->InventoryComponent->SubtractAmmo(GetClass(), ReserveAmmo); // use up everything 
+				}
+			}
 		}
 	}
 }

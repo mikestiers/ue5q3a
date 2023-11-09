@@ -33,11 +33,28 @@ public:
 	UPROPERTY()
 	AQ3A_Character* Character;
 
+	UFUNCTION()
+	void AddAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount);
+
+	UFUNCTION()
+	int32 CheckAmmo(TSubclassOf<AWeapon> AmmoType);
+
+	UFUNCTION()
+	void SubtractAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount);
+
+	UFUNCTION()
+	void SetupStartingWeapons();
+
+	UFUNCTION()
+	void AddWeapon(TSubclassOf<AWeapon> WeaponClass);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void SetupStartingWeapons();
+private:
+	UPROPERTY()
+	TMap<TSubclassOf<AWeapon>, int32> AmmoMap;
 
 public:	
 	void FireCurrentWeapon();

@@ -30,12 +30,6 @@ public:
 	int32 CurrentAmmo;
 
 	UPROPERTY(EditAnywhere)
-	int32 ReserveAmmo;
-
-	UPROPERTY(EditAnywhere)
-	int32 MaxReserveAmmo;
-
-	UPROPERTY(EditAnywhere)
 	int32 AmmoMagazineCapacity;
 
 	UPROPERTY(EditAnywhere)

@@ -15,6 +15,32 @@ UInventoryComponent::UInventoryComponent()
 	// ...
 }
 
+void UInventoryComponent::AddAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount)
+{
+	AmmoMap.Add(AmmoType, AmmoAmount);
+}
+
+int32 UInventoryComponent::CheckAmmo(TSubclassOf<AWeapon> AmmoType)
+{
+	if (AmmoMap.Contains(AmmoType))
+	{
+		return AmmoMap[AmmoType];
+	}
+	return 0; // not in inventory yet
+}
+
+void UInventoryComponent::SubtractAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount)
+{
+	if (AmmoMap.Contains(AmmoType))
+	{
+		AmmoMap[AmmoType] -= AmmoAmount;
+		if (AmmoMap[AmmoType] < 0)
+		{
+			AmmoMap[AmmoType] = 0;
+		}
+	}
+}
+
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -26,17 +52,22 @@ void UInventoryComponent::SetupStartingWeapons()
 {
 	for (int32 i = 0; i < StartingWeapons.Num(); i++)
 	{
-		AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(StartingWeapons[i], GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
-		
-		if (Weapon && Character)
-		{
-			Weapon->SetOwner(Character);
-			FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
-			Weapon->AttachToComponent(Character->GetCharacterMesh(), AttachmentTransformRules, Weapon->SocketName);
-			Weapons.Add(Weapon);
-		}
+		AddWeapon(StartingWeapons[i]);
 	}
 	SelectWeaponByIndex(0);
+}
+
+void UInventoryComponent::AddWeapon(TSubclassOf<AWeapon> WeaponClass)
+{
+	AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
+
+	if (Weapon && Character)
+	{
+		Weapon->SetOwner(Character);
+		FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+		Weapon->AttachToComponent(Character->GetCharacterMesh(), AttachmentTransformRules, Weapon->SocketName);
+		Weapons.Add(Weapon);
+	}
 }
 
 void UInventoryComponent::FireCurrentWeapon()
