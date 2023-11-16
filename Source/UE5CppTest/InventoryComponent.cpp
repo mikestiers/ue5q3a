@@ -127,6 +127,7 @@ void UInventoryComponent::SelectWeaponByIndex(int32 index)
 				Weapons[i]->SetActorHiddenInGame(true);
 			}
 		}
+		OnWeaponChangeDelegate.Broadcast(Weapons[index]->GetClass(), Weapons[index]->CurrentAmmo, CheckAmmo(Weapons[index]->GetClass()));
 	}
 }
 
@@ -137,5 +138,10 @@ AWeapon* UInventoryComponent::GetCurrentWeapon()
 		return Weapons[CurrentWeaponIndex];
 	}
 	return nullptr;
+}
+
+void UInventoryComponent::OnFireCurrentWeapon(TSubclassOf<AWeapon> Weapon, int32 CurrentAmmo)
+{
+	OnFireCurrentWeaponDelegate.Broadcast(Weapon, CurrentAmmo);
 }
 

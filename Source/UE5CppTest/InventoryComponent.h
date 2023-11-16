@@ -9,6 +9,9 @@
 class AWeapon;
 class AQ3A_Character;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnWeaponChangeDelegate, TSubclassOf<AWeapon>, Weapon, int32, CurrentAmmo, int32, ReserveAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFireCurrentWeaponDelegate, TSubclassOf<AWeapon>, Weapon, int32, CurrentAmmo);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE5CPPTEST_API UInventoryComponent : public UActorComponent
 {
@@ -17,6 +20,12 @@ class UE5CPPTEST_API UInventoryComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UInventoryComponent();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponChangeDelegate OnWeaponChangeDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnFireCurrentWeaponDelegate OnFireCurrentWeaponDelegate;
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<AWeapon>> StartingWeapons;
@@ -68,4 +77,6 @@ public:
 	void SelectWeaponByIndex(int32 index);
 
 	AWeapon* GetCurrentWeapon();
+
+	void OnFireCurrentWeapon(TSubclassOf<AWeapon> Weapon, int32 CurrentAmmo);
 };

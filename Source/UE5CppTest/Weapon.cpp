@@ -52,6 +52,13 @@ void AWeapon::Fire()
 	{
 		FireLineTrace();
 	}
+	if (AQ3A_Character* Character = Cast<AQ3A_Character>(GetOwner()))
+	{
+		if (Character->InventoryComponent)
+		{
+			Character->InventoryComponent->OnFireCurrentWeapon(GetClass(), CurrentAmmo);
+		}
+	}
 }
 
 void AWeapon::FireProjectile()
@@ -71,12 +78,14 @@ void AWeapon::FireProjectile()
 void AWeapon::FireLineTrace()
 {
 	// Line trace #1 for camera
-	FHitResult CameraHitResult = GetWeaponLineTrace();
+	FHitResult CameraHitResult = GetWeaponLineTrace(); // forward vector of the player * range
 
 	// Line trace #2 for bullet from muzzle of gun
 	FHitResult FireHitResult;
-	FVector StartLocation = SkeletalMeshComponent->GetSocketLocation("Muzzle");
-	FVector EndLocation = ((CameraHitResult.Location - StartLocation).GetSafeNormal() * CameraRange) + StartLocation;
+	FVector StartLocation = SkeletalMeshComponent->GetSocketLocation("Muzzle"); // point of the gun
+	FVector EndLocation = ((CameraHitResult.Location - StartLocation).GetSafeNormal() * CameraRange) + StartLocation; // gun to target
+
+	// i somehow know the variable or whatever that exists when i start the game
 
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(GetOwner());

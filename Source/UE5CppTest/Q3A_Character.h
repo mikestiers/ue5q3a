@@ -20,7 +20,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UHealthComponent* HealthComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) // technically blueprintreadonly not needed
 	UInventoryComponent* InventoryComponent;
 
 public:
