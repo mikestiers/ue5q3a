@@ -74,7 +74,7 @@ void UInventoryComponent::FireCurrentWeapon()
 {
 	if (Weapons.IsValidIndex(CurrentWeaponIndex))
 	{
-		Weapons[CurrentWeaponIndex]->Fire();
+		Weapons[CurrentWeaponIndex]->TryFire();
 	}
 }
 

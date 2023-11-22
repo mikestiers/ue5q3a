@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Explosion.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -39,12 +40,10 @@ void AProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		return;
 	}
-	Explode();
-}
-
-void AProjectile::Explode()
-{
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
+	if (ExplosionClass)
+	{
+		AExplosion* Explosion = GetWorld()->SpawnActor<AExplosion>(ExplosionClass, GetActorLocation(), FRotator::ZeroRotator);
+	}
 	Destroy();
 }
 

@@ -29,7 +29,7 @@ AWeapon::AWeapon()
 
 void AWeapon::TryFire()
 {
-	if (bCanFire)
+	if (bCanFire && CurrentAmmo > 0)
 	{
 		Fire();
 	}

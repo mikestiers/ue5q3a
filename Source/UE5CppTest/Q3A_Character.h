@@ -17,7 +17,7 @@ class UE5CPPTEST_API AQ3A_Character : public ACharacter
 	GENERATED_BODY()
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) // technically blueprintreadonly not needed

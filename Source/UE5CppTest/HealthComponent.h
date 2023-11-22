@@ -6,13 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDamageTakenDelegate, float, Damage, float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealDelegate, float, HealAmount, float, CurrentHealth, float, MaxHealth);
+
 UCLASS( ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
 class UE5CPPTEST_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	UPROPERTY(BlueprintAssignable)
+	FOnDamageTakenDelegate OnDamageTakenDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealDelegate OnHealDelegate;
+
 	UHealthComponent();
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentHealth;
@@ -27,11 +35,15 @@ public:
 	FTimerHandle DeathTimerHandle;
 
 public:	
+	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float DamageAmount);
 
 	void Died();
 
 	UFUNCTION()
 	void OnDeathComplete();
+
+	UFUNCTION()
+	void Heal(float HealAmount);
 
 };

@@ -24,6 +24,7 @@ void UHealthComponent::TakeDamage(float DamageAmount)
 		{
 			Died();
 		}
+		OnDamageTakenDelegate.Broadcast(DamageAmount, CurrentHealth, MaxHealth);
 	}
 }
 
@@ -48,4 +49,14 @@ void UHealthComponent::Died()
 void UHealthComponent::OnDeathComplete()
 {
 	UGameplayStatics::OpenLevelBySoftObjectPtr(this, MapToLoadOnDeath, true, "");
+}
+
+void UHealthComponent::Heal(float HealAmount)
+{
+	if (!bDead)
+	{
+		CurrentHealth += HealAmount;
+		CurrentHealth = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+		OnHealDelegate.Broadcast(HealAmount, CurrentHealth, MaxHealth);
+	}
 }
