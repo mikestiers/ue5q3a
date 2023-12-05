@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDamageTakenDelegate, float, Damage, float, CurrentHealth, float, MaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealDelegate, float, HealAmount, float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnDamageTakenDelegate, float, Damage, float, CurrentHealth, float, MaxHealth, AActor*, Instigator);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealDelegate, float, HealAmount, float, CurrentHealth, float, MaxHealth, AActor*, Instigator);
 
 UCLASS( ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
 class UE5CPPTEST_API UHealthComponent : public UActorComponent
@@ -36,7 +36,7 @@ public:
 
 public:	
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float DamageAmount);
+	void TakeDamage(float DamageAmount, AActor* Instigator);
 
 	void Died();
 

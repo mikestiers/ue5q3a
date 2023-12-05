@@ -46,6 +46,9 @@ public:
 
 	FTimerHandle FireRateTimerHandle;
 
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* BloodParticleSystem;
+
 	void TryFire();
 
 	void Fire();

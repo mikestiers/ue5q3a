@@ -11,6 +11,7 @@ UInventoryComponent::UInventoryComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	bUnlimitedAmmo = false;
 
 	// ...
 }
@@ -22,6 +23,11 @@ void UInventoryComponent::AddAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmoun
 
 int32 UInventoryComponent::CheckAmmo(TSubclassOf<AWeapon> AmmoType)
 {
+	if (bUnlimitedAmmo)
+	{
+		return 999;
+	}
+
 	if (AmmoMap.Contains(AmmoType))
 	{
 		return AmmoMap[AmmoType];
@@ -31,12 +37,15 @@ int32 UInventoryComponent::CheckAmmo(TSubclassOf<AWeapon> AmmoType)
 
 void UInventoryComponent::SubtractAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount)
 {
-	if (AmmoMap.Contains(AmmoType))
+	if (!bUnlimitedAmmo)
 	{
-		AmmoMap[AmmoType] -= AmmoAmount;
-		if (AmmoMap[AmmoType] < 0)
+		if (AmmoMap.Contains(AmmoType))
 		{
-			AmmoMap[AmmoType] = 0;
+			AmmoMap[AmmoType] -= AmmoAmount;
+			if (AmmoMap[AmmoType] < 0)
+			{
+				AmmoMap[AmmoType] = 0;
+			}
 		}
 	}
 }

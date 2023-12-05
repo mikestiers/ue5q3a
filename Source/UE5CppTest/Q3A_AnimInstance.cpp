@@ -4,6 +4,7 @@
 #include "Q3A_AnimInstance.h"
 #include "PlayerCharacter.h"
 #include "InventoryComponent.h"
+#include "HealthComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -12,6 +13,7 @@ UQ3A_AnimInstance::UQ3A_AnimInstance()
 	bIsHoldingWeapon = false;
 	Speed = 0.0f;
 	bIsFalling = false;
+	bIsDead = false;
 }
 
 void UQ3A_AnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -28,6 +30,11 @@ void UQ3A_AnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		if (UCharacterMovementComponent* CharacterMovementComponent = Character->GetCharacterMovement())
 		{
 			bIsFalling = CharacterMovementComponent->IsFalling();
+		}
+
+		if (Character->HealthComponent)
+		{
+			bIsDead = Character->HealthComponent->bDead;
 		}
 	}
 }

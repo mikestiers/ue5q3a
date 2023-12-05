@@ -20,5 +20,5 @@ public:
 	UTextBlock* HealthText;
 
 	UFUNCTION()
-	void OnHealthChange(float Damage, float CurrentHealth, float MaxHealth);
+	void OnHealthChange(float Damage, float CurrentHealth, float MaxHealth, AActor* Instigator);
 };

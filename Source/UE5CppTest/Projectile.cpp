@@ -43,6 +43,10 @@ void AProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (ExplosionClass)
 	{
 		AExplosion* Explosion = GetWorld()->SpawnActor<AExplosion>(ExplosionClass, GetActorLocation(), FRotator::ZeroRotator);
+		if (Explosion)
+		{
+			Explosion->SetOwner(GetOwner());
+		}
 	}
 	Destroy();
 }

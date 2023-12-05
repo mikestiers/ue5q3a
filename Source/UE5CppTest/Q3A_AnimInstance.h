@@ -26,6 +26,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsFalling;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsDead;
+
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 };

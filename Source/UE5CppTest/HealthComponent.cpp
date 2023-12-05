@@ -4,6 +4,7 @@
 #include "HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "AIController.h"
+#include "BrainComponent.h"
 
 // Sets default values
 UHealthComponent::UHealthComponent()
@@ -14,7 +15,7 @@ UHealthComponent::UHealthComponent()
 	DeathTime = 3.0f;
 }
 
-void UHealthComponent::TakeDamage(float DamageAmount)
+void UHealthComponent::TakeDamage(float DamageAmount, AActor* Instigator)
 {
 	if (!bDead)
 	{
@@ -24,7 +25,7 @@ void UHealthComponent::TakeDamage(float DamageAmount)
 		{
 			Died();
 		}
-		OnDamageTakenDelegate.Broadcast(DamageAmount, CurrentHealth, MaxHealth);
+		OnDamageTakenDelegate.Broadcast(DamageAmount, CurrentHealth, MaxHealth, Instigator);
 	}
 }
 
@@ -39,9 +40,9 @@ void UHealthComponent::Died()
 			PlayerController->DisableInput(PlayerController);
 			GetWorld()->GetTimerManager().SetTimer(DeathTimerHandle, this, &UHealthComponent::OnDeathComplete, DeathTime, false);
 		}
-		else
+		else if (AAIController* AIController = Cast<AAIController>(Pawn->GetController()))
 		{
-			// TODO: Add logic for AI character dies
+			AIController->GetBrainComponent()->StopLogic("Dead");
 		}
 	}
 }
@@ -57,6 +58,6 @@ void UHealthComponent::Heal(float HealAmount)
 	{
 		CurrentHealth += HealAmount;
 		CurrentHealth = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
-		OnHealDelegate.Broadcast(HealAmount, CurrentHealth, MaxHealth);
+		OnHealDelegate.Broadcast(HealAmount, CurrentHealth, MaxHealth, GetOwner());
 	}
 }

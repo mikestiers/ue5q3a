@@ -19,7 +19,7 @@ void UHealthCounter::NativeOnInitialized()
 	}
 }
 
-void UHealthCounter::OnHealthChange(float Damage, float CurrentHealth, float MaxHealth) // these params come from the delegate in healthcomponent.h
+void UHealthCounter::OnHealthChange(float Damage, float CurrentHealth, float MaxHealth, AActor* Instigator) // these params come from the delegate in healthcomponent.h
 {
 	if (HealthText)
 	{

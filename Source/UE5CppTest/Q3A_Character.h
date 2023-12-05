@@ -43,6 +43,7 @@ public:
 
 	void LookRight(const FInputActionValue& ActionValue);
 
+	UFUNCTION(BlueprintCallable)
 	void Fire(const FInputActionValue& ActionValue);
 
 	void WeaponSwitch(const FInputActionValue& ActionValue);

@@ -42,6 +42,9 @@ public:
 	UPROPERTY()
 	AQ3A_Character* Character;
 
+	UPROPERTY(EditAnywhere)
+	bool bUnlimitedAmmo;
+
 	UFUNCTION()
 	void AddAmmo(TSubclassOf<AWeapon> AmmoType, int32 AmmoAmount);
 
@@ -66,6 +69,7 @@ private:
 	TMap<TSubclassOf<AWeapon>, int32> AmmoMap;
 
 public:	
+	UFUNCTION(BlueprintCallable)
 	void FireCurrentWeapon();
 
 	void ReloadCurrentWeapon();
@@ -76,6 +80,7 @@ public:
 
 	void SelectWeaponByIndex(int32 index);
 
+	UFUNCTION(BlueprintPure)
 	AWeapon* GetCurrentWeapon();
 
 	void OnFireCurrentWeapon(TSubclassOf<AWeapon> Weapon, int32 CurrentAmmo);

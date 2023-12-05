@@ -9,6 +9,7 @@
 #include "HealthComponent.h"
 #include "Camera/CameraComponent.h"
 #include "InventoryComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -83,7 +84,8 @@ void AWeapon::FireLineTrace()
 	// Line trace #2 for bullet from muzzle of gun
 	FHitResult FireHitResult;
 	FVector StartLocation = SkeletalMeshComponent->GetSocketLocation("Muzzle"); // point of the gun
-	FVector EndLocation = ((CameraHitResult.Location - StartLocation).GetSafeNormal() * CameraRange) + StartLocation; // gun to target
+	FVector FireDirection = (CameraHitResult.Location - StartLocation).GetSafeNormal();
+	FVector EndLocation = (FireDirection * CameraRange) + StartLocation; // gun to target
 
 	// i somehow know the variable or whatever that exists when i start the game
 
@@ -100,7 +102,13 @@ void AWeapon::FireLineTrace()
 		{
 			if (Character->HealthComponent)
 			{
-				Character->HealthComponent->TakeDamage(Damage);
+				Character->HealthComponent->TakeDamage(Damage, GetOwner());
+			}
+			if (BloodParticleSystem)
+			{
+				FRotator BloodRotation = FireDirection.Rotation();
+				BloodRotation.Yaw += 90.0f;
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticleSystem, FireHitResult.ImpactPoint, BloodRotation, true);
 			}
 		}
 	}

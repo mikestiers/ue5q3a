@@ -29,7 +29,7 @@ void AExplosion::Explode()
 		{
 			if (Character->HealthComponent)
 			{
-				Character->HealthComponent->TakeDamage(Damage);
+				Character->HealthComponent->TakeDamage(Damage, GetOwner());
 			}
 		}
 	}
