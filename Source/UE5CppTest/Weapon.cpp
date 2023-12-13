@@ -60,6 +60,12 @@ void AWeapon::Fire()
 			Character->InventoryComponent->OnFireCurrentWeapon(GetClass(), CurrentAmmo);
 		}
 	}
+	
+	if (FireSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, GetActorLocation());
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, GetActorLocation(), FRotator::ZeroRotator);
+	}
 }
 
 void AWeapon::FireProjectile()

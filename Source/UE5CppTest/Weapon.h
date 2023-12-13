@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 class AProjectile;
+class USoundBase;
 
 UCLASS()
 class UE5CPPTEST_API AWeapon : public AActor
@@ -48,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* BloodParticleSystem;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* FireSound;
 
 	void TryFire();
 
